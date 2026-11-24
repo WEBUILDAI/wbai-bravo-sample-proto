@@ -1,8 +1,9 @@
 """FastAPI-Anwendung mit Health-Check und einer kleinen Item-Liste."""
 
 import logging
+from typing import Annotated
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from pydantic import BaseModel
 
 from app.logging_config import setup_logging
@@ -47,12 +48,22 @@ def health() -> dict[str, str]:
 
 
 @app.get("/items")
-def list_items() -> list[Item]:
-    """Liefert alle Items.
+def list_items(
+    category: Annotated[
+        str | None,
+        Query(min_length=1, description="Nur Items dieser Kategorie (exakter Vergleich)."),
+    ] = None,
+) -> list[Item]:
+    """Liefert alle Items, optional gefiltert nach Kategorie.
+
+    Args:
+        category: Kategorie, auf die gefiltert wird. Ohne Angabe kommen alle Items.
+            Unbekannte Kategorien liefern eine leere Liste.
 
     Returns:
-        Liste aller Items.
+        Liste der passenden Items in der ursprünglichen Reihenfolge.
 
     """
-    logger.info("Liste %d Items", len(ITEMS))
-    return ITEMS
+    items = ITEMS if category is None else [item for item in ITEMS if item.category == category]
+    logger.info("Liste %d Items (category=%s)", len(items), category)
+    return items

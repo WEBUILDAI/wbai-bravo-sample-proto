@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Handoff und Ablauf
+    url: https://github.com/WEBUILDAI/wbai-bravo-sample-proto/blob/main/docs/RUNBOOK.md
+    about: Wie Board- und Slice-Issues in Cloud sessions umgesetzt werden.
