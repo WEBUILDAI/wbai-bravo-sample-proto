@@ -1,0 +1,56 @@
+name: Slice
+description: Ein umsetzbarer Schnitt. Ein Slice = ein Branch = ein PR gegen main.
+title: "[Slice] "
+labels: ["slice"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **[PROTOTYP]** Ein Slice ist in einer Cloud session umsetzbar und endet mit grünem
+        `make verify`. Start: `claude --cloud "Board #<n> umsetzen"` (siehe `docs/RUNBOOK.md`).
+  - type: input
+    id: board
+    attributes:
+      label: Board-Issue
+      placeholder: "#12"
+    validations:
+      required: true
+  - type: input
+    id: spec
+    attributes:
+      label: Spec-Abschnitt
+      placeholder: docs/specs/0001-items-filter.md#verhalten
+    validations:
+      required: true
+  - type: textarea
+    id: aufgabe
+    attributes:
+      label: Aufgabe
+      description: Was genau ändert dieser Slice?
+    validations:
+      required: true
+  - type: textarea
+    id: akzeptanz
+    attributes:
+      label: Akzeptanzkriterien
+      description: Prüfbar, möglichst als Given/When/Then. Jedes Kriterium hat einen Test.
+      placeholder: |
+        - Given …, when …, then …
+    validations:
+      required: true
+  - type: dropdown
+    id: branch
+    attributes:
+      label: Branch-Typ
+      options:
+        - feature
+        - bugfix
+        - hotfix
+        - chore
+    validations:
+      required: true
+  - type: textarea
+    id: hinweise
+    attributes:
+      label: Hinweise
+      description: Betroffene Dateien, Abhängigkeiten, bekannte Annahmen.

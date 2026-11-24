@@ -1,0 +1,39 @@
+name: Board
+description: Feature auf Board-Ebene. Verweist auf genau eine Spec und bündelt Slice-Sub-Issues.
+title: "[Board] "
+labels: ["board"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **[PROTOTYP]** Ein Board-Issue = ein Feature = eine Spec in `docs/specs/`.
+        Die Umsetzung passiert in Slice-Sub-Issues (Template „Slice“), je Slice ein PR.
+  - type: input
+    id: spec
+    attributes:
+      label: Spec
+      description: Pfad zur Spec.
+      placeholder: docs/specs/0001-items-filter.md
+    validations:
+      required: true
+  - type: textarea
+    id: ziel
+    attributes:
+      label: Ziel
+      description: Was soll nach Abschluss möglich sein? Ein bis drei Sätze.
+    validations:
+      required: true
+  - type: textarea
+    id: slices
+    attributes:
+      label: Slices
+      description: Geplante Slice-Sub-Issues, je eine Zeile. Werden als Sub-Issues verknüpft.
+      placeholder: |
+        - [ ] Slice 1: …
+        - [ ] Slice 2: …
+    validations:
+      required: true
+  - type: textarea
+    id: nicht-ziele
+    attributes:
+      label: Nicht-Ziele
