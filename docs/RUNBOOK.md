@@ -44,3 +44,12 @@ Fortschritt ansehen: claude.ai/code oder `claude --resume`.
 ## Beispiel
 Spec `docs/specs/0001-items-filter.md` ist das Referenz-Feature: Board-Issue „Items nach Kategorie
 filtern“ mit zwei Slice-Sub-Issues (Slice 1 Filter, Slice 2 Validierung).
+
+## Automatische Läufe (S9, S10)
+| Label | Wer setzt es | Was passiert |
+|---|---|---|
+| `triage` | Wissens-MCP (`vorschlag_anlegen`) oder Team | `bravo-triage.yml`: Rückfragen (`rueckfrage`) oder Triage-Ergebnis (`triage-ok`) als Kommentar |
+| `ready` | immer ein Mensch | `bravo-implement.yml`: Branch `claude/issue-<n>-…`, `make verify`, PR gegen `main`, Label → `in-review` |
+
+Beide Workflows laufen ohne die Repo-Variablen `ANTHROPIC_FEDERATION_RULE_ID` und
+`ANTHROPIC_ORGANIZATION_ID` als grüner No-op. Fehlschläge kommentiert `bravo-implement` im Issue.

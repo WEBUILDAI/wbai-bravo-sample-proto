@@ -75,3 +75,20 @@ def test_triage_guard() -> None:
         assert token in condition
     prompt = _claude_step(data)["with"]["prompt"]
     assert "Setze niemals das Label `ready`" in prompt
+
+
+def test_implement_guard_and_branch_prefix() -> None:
+    """Given bravo-implement, when geprüft, then Label ready, nur Menschen, Präfix claude/."""
+    data = _load(WORKFLOWS / "bravo-implement.yml")
+    assert set(data["on"]) == {"issues"}
+    condition = data["jobs"]["implement"]["if"]
+    assert "github.event.label.name == 'ready'" in condition
+    assert "github.event.sender.type == 'User'" in condition
+    assert '"OWNER","MEMBER","COLLABORATOR"' in condition
+    step = _claude_step(data)["with"]
+    assert step["branch_prefix"] == "claude/"
+    assert "git checkout -b claude/" in step["prompt"]
+    args = step["claude_args"]
+    assert "Bash(make verify)" in args
+    assert "Bash(git push -u origin claude/*)" in args
+    assert "Bash(gh pr merge *)" in args.split("--disallowedTools", 1)[1]
