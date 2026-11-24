@@ -8,13 +8,15 @@
 #                          hängt der Proxy das Bearer-Token als Network secret an; lokal kommt
 #                          es aus BRAVO_KONTEXT_TOKEN.
 # Ist nichts gesetzt, tut das Skript nichts.
+# BRAVO_ENV_FILE überschreibt den Pfad der .env (Standard: .env im Repo, für Tests umlenkbar).
 set -uo pipefail
 cd "$(dirname "$0")/.."
 
-if [ -f .env ]; then
+env_file="${BRAVO_ENV_FILE:-.env}"
+if [ -f "$env_file" ]; then
   set -a
-  # shellcheck disable=SC1091
-  . ./.env
+  # shellcheck disable=SC1090
+  . "$env_file"
   set +a
 fi
 
