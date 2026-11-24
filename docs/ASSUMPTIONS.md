@@ -16,3 +16,9 @@
 | 12 | Issue-Templates setzen Labels `board` und `slice`; die Labels legt der Operator an, falls GitHub sie nicht automatisch erzeugt. | Templates können Labels nur zuweisen, wenn sie existieren. | ja, Admin |
 | 13 | Board-Issue „Items nach Kategorie filtern“ mit zwei Slice-Sub-Issues legt der lokale Operator an; die Implementierung liegt bereits im S2-PR. | HANDOFF: Board-Issues nicht aus der Cloud session. Das Board dokumentiert dann den bereits umgesetzten Stand bzw. dient als Probelauf für `claude --cloud`. | ja, Operator |
 | 14 | Der Card-Payload wird über das echte Skript getestet; `curl` ersetzt ein Fake im `PATH`. Neue Variable `BRAVO_ENV_FILE` lenkt die `.env` um, damit lokale Werte Tests nicht beeinflussen. | Kein Refactoring des Skripts nötig, Test deckt auch Ziel-URL und Header ab. | nein |
+| 15 | ADO erhält pro Sync genau einen Snapshot-Commit auf `sync/<short-sha>`, basierend auf ADO-`main`; keine GitHub-Historie. | Ausgeschlossene Dateien dürfen nicht über die Historie ins Kunden-Repo gelangen. | nein |
+| 16 | Das ADO-Repo hat bereits ein initiales `main`. | Ohne Ziel-Branch kann kein PR entstehen. | ja, Admin |
+| 17 | `az repos` nutzt die `azure/login`-Anmeldung (Entra-Token), kein PAT; Git-Push nutzt das Token als `http.extraheader`, nie in der URL. | WIF/OIDC statt Secrets. | ja, beim ersten echten Lauf prüfen |
+| 18 | Ohne Repo-Variablen ist `sync-ado` ein grüner No-op mit Notice. | Merges auf `main` sollen vor der Admin-Einrichtung keine roten Läufe erzeugen. | nein |
+| 19 | Exclude-Liste als Datei `.github/ado-sync-exclude.txt` (im Prototyp leer). | Versioniert und im PR prüfbar, statt Repo-Variable. | nein |
+| 20 | Entra-App, Federated Credential, ADO-Projekt/-Repo, SP-Rechte in ADO und die sechs Repo-Variablen richtet ein Admin lokal ein (`docs/output-sync.md`). | Keine Entra-/ADO-/Repo-Admin-Rechte in der Cloud session. | ja, Admin |
