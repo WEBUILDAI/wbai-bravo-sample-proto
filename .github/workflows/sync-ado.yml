@@ -1,0 +1,91 @@
+# [PROTOTYP] Spiegelt main nach Azure DevOps: Branch sync/<short-sha> + PR im ADO-Repo.
+# Auth: azure/login per OIDC (Entra-App wbai-bravo-sample-sync-proto, Federated Credential
+# repo:WEBUILDAI/wbai-bravo-sample-proto:ref:refs/heads/main). Kein Secret, nur Repo-Variablen.
+# Ohne Variablen läuft der Workflow grün durch und meldet nur, dass er nicht konfiguriert ist.
+# Doku: docs/output-sync.md
+name: sync-ado
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: sync-ado
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: sync
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      ADO_ORG_URL: ${{ vars.ADO_ORG_URL }}
+      ADO_PROJECT: ${{ vars.ADO_PROJECT }}
+      ADO_REPO: ${{ vars.ADO_REPO }}
+    steps:
+      - name: Konfiguration prüfen
+        id: cfg
+        run: |
+          missing=()
+          for v in AZURE_CLIENT_ID AZURE_TENANT_ID AZURE_SUBSCRIPTION_ID ADO_ORG_URL ADO_PROJECT ADO_REPO; do
+            [ -z "${!v}" ] && missing+=("$v")
+          done
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::notice title=sync-ado::Nicht konfiguriert, übersprungen. Fehlende Repo-Variablen: ${missing[*]}"
+            echo "configured=false" >>"$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >>"$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v6
+        if: steps.cfg.outputs.configured == 'true'
+
+      - name: Azure Login (OIDC)
+        if: steps.cfg.outputs.configured == 'true'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: ADO-Token holen
+        if: steps.cfg.outputs.configured == 'true'
+        run: |
+          # 499b84ac-… ist die feste Resource-ID von Azure DevOps.
+          token="$(az account get-access-token \
+            --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv)"
+          echo "::add-mask::$token"
+          echo "ADO_TOKEN=$token" >>"$GITHUB_ENV"
+
+      - name: Branch sync/<short-sha> pushen
+        id: push
+        if: steps.cfg.outputs.configured == 'true'
+        env:
+          ADO_REMOTE_URL: ${{ vars.ADO_ORG_URL }}/${{ vars.ADO_PROJECT }}/_git/${{ vars.ADO_REPO }}
+        run: bash scripts/sync-ado.sh
+
+      - name: PR in Azure DevOps anlegen
+        if: steps.cfg.outputs.configured == 'true' && steps.push.outputs.changed == 'true'
+        env:
+          BRANCH: ${{ steps.push.outputs.branch }}
+        run: |
+          az extension add --name azure-devops --only-show-errors
+          az repos pr create \
+            --organization "$ADO_ORG_URL" --project "$ADO_PROJECT" --repository "$ADO_REPO" \
+            --source-branch "$BRANCH" --target-branch main \
+            --title "[PROTOTYP] Sync ${GITHUB_SHA::7}" \
+            --description "[PROTOTYP] Gespiegelt aus ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}" \
+            --only-show-errors --output none
+          echo "::notice title=sync-ado::PR für $BRANCH angelegt."
+
+      - name: Nichts zu tun
+        if: steps.cfg.outputs.configured == 'true' && steps.push.outputs.changed != 'true'
+        run: echo "::notice title=sync-ado::ADO-main entspricht bereits diesem Stand."

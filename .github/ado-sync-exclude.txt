@@ -1,0 +1,8 @@
+# Pfade, die NICHT nach Azure DevOps gespiegelt werden. Eine Zeile pro Pfad (relativ zum Repo-Root,
+# git-Pathspec). Leerzeilen und Zeilen mit # werden ignoriert. `.git` wird nie gespiegelt.
+#
+# Prototyp: leer, alles wird gespiegelt.
+# Empfohlener Kunden-Default (auskommentiert):
+# .claude/
+# CLAUDE.md
+# .mcp.json
