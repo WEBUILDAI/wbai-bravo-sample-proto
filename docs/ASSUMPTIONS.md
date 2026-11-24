@@ -42,3 +42,4 @@
 | 38 | PRs, die mit `GITHUB_TOKEN` angelegt werden, starten keine anderen Workflows; CI `verify` läuft dann erst nach einem Push durch einen Menschen oder per App-Token. Abhilfe: GitHub App (A12) als Token für `gh` (Secret, nicht im Repo). | GitHub-Schutz gegen Workflow-Rekursion. | ja, Admin |
 | 39 | `bravo-wissen-pflege.yml` (S10) gehört ins Wissens-Repo und ist nicht Teil dieses PRs. | Aufteilung laut HANDOFF. | ja, wissen |
 | 40 | Labels `ready` und `in-review` legt der Operator an. | Repo-Einstellung. | ja, Admin |
+| 41 | Der Abschlussbericht `docs/TRACER-BULLET-REPORT.md` kommt als eigener PR (`chore/tracer-bullet-report`) oben auf den Stapel. | Kein Slice; braucht die PR-Nummern der Slices. | nein |
