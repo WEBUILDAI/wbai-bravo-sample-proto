@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "bravo-kontext": {
+      "type": "http",
+      "url": "${BRAVO_KONTEXT_URL:-http://localhost:8000}/mcp",
+      "headers": {
+        "Authorization": "Bearer ${BRAVO_KONTEXT_TOKEN:-}"
+      }
+    }
+  }
+}
