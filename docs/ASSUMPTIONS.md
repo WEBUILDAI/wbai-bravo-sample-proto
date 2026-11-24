@@ -29,3 +29,4 @@
 | 25 | `.mcp.json` nutzt `${BRAVO_KONTEXT_URL:-http://localhost:8000}` und `${BRAVO_KONTEXT_TOKEN:-}`. Ohne Variable schlägt nur die MCP-Verbindung fehl, die Session läuft weiter. In Cloud sessions hängt der Proxy das Token als Network secret an. | Keine Secrets in Dateien. | nein |
 | 26 | Spec 0002 ist nur Spec (Status entwurf), keine Implementierung. | HANDOFF S7 nennt nur die Spec; sie dient als Beispiel für `plan-to-issues` und den nächsten Async-Loop-Durchlauf. | nein |
 | 27 | Network secret / Env `BRAVO_KONTEXT_URL` und `BRAVO_KONTEXT_TOKEN` im Cloud environment setzt der Operator, sobald S6 deployt ist. | Admin-Schritt. | ja, Operator |
+| 28 | `auto-claude.js` nutzt das Workflow-Tool-Format von Claude Code (`export const meta`, `agent`, `parallel`, `phase`), Standard `dryRun: true`. | HANDOFF: nur Gerüst; ein versehentlicher Start soll nichts ändern. Im Lauf nicht ausgeführt (Workflows nur auf ausdrücklichen Wunsch). | nein |
