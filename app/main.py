@@ -20,6 +20,7 @@ class Item(BaseModel):
         id: Eindeutige ID.
         name: Anzeigename.
         category: Kategorie für spätere Filter.
+
     """
 
     id: int
@@ -40,6 +41,7 @@ def health() -> dict[str, str]:
 
     Returns:
         Statusobjekt mit dem Feld "status".
+
     """
     return {"status": "ok"}
 
@@ -50,6 +52,7 @@ def list_items() -> list[Item]:
 
     Returns:
         Liste aller Items.
+
     """
     logger.info("Liste %d Items", len(ITEMS))
     return ITEMS
