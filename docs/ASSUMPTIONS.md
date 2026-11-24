@@ -8,3 +8,7 @@
 | 4 | Stop-Hook blockiert nur einmal (`stop_hook_active`), danach meldet er nur. | Keine Endlosschleife. | nein |
 | 5 | Teams-Hinweis nur in Cloud sessions (`CLAUDE_CODE_REMOTE=true`) oder mit `BRAVO_NOTIFY=always`. | Lokal kein Lärm. | nein |
 | 6 | In Cloud sessions geht der Teams-Hinweis über `BRAVO_KONTEXT_URL/notify`; der Webhook liegt nur im Kontext-Server. | Webhook-URL ist ein Secret und soll nicht in jede Session. | ja, S6 |
+| 7 | Commits des unbeaufsichtigten Tracer-Bullet-Laufs tragen die neutrale Identität `wbai-bravo-proto <wbai-bravo-proto@users.noreply.github.com>`. | Keine Hinweise auf Werkzeuge, keine persönliche Adresse als Autor eines Agent-Laufs. | nein |
+| 8 | Slice-Branches sind gestapelt: `feature/s2-…` basiert auf `feature/s1-…` usw.; jeder PR zielt auf `main`. Merge-Reihenfolge S1 → S2 → S3 → S4 → S7 → S8 → S9 → S10. | Alle Slices ergänzen `docs/ASSUMPTIONS.md` und teils dieselben Dateien; unabhängige Branches würden bei jedem Merge Konflikte erzeugen. Nach dem Merge eines PRs schrumpft der Diff des nächsten. Siehe `docs/decisions/0002-gestapelte-slice-branches.md`. | nein |
+| 9 | S1-Rest: `docs/ASSUMPTIONS.md`, `docs/specs/` und `docs/decisions/0001-prototyp-rahmen.md` liegen bereits auf `main`. Der S1-PR ergänzt nur Entscheidungs-Index, ADR 0002 und die Anleitung für den Branch-Schutz. | Bestand nicht doppelt anlegen. | nein |
+| 10 | Branch-Schutz auf `main` (Check `verify`, PR Pflicht) setzt ein Repo-Admin lokal (`docs/branch-protection.md`). | Die Cloud session hat keine Admin-Rechte auf Repo-Einstellungen. | ja, Admin |
