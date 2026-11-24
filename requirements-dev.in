@@ -1,0 +1,8 @@
+# Entwicklungs-Abhängigkeiten. requirements-dev.txt per `make compile`.
+-c requirements.txt
+pytest==9.2.0
+httpx==0.28.1
+black==26.10.1
+ruff==0.17.6
+pip-tools==7.7.0
+pre-commit==4.7.0
