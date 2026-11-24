@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(pulumi up *)",
+      "Bash(pulumi destroy *)",
+      "Bash(az * create *)",
+      "Bash(az * delete *)",
+      "Bash(git push --force *)",
+      "Bash(git push -f *)",
+      "Bash(gh pr merge *)",
+      "Read(./.env)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/scripts/hooks/on-stop.sh",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}
